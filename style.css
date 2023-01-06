@@ -50,14 +50,20 @@ body {
   border-radius: 5px;
 }
 
+.btn--ac, .btn-equal, .btn--math-operator {
+  color: #0D1744;
+}
+
 .btn--ac {
   background-color: #DDE1FF;
-  color: #0D1744;
 }
 
 .btn-equal {
   background-color: #A7EDFF;
-  color: #0D1744;
+}
+
+.btn--math-operator {
+  background-color: #97AFB7;
 }
 
 
