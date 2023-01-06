@@ -68,3 +68,7 @@ body {
 .btn--math-operator {
   background-color: #97AFB7;
 }
+
+.btn--basis {
+  flex-basis: 153px
+}
