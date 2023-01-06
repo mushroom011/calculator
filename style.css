@@ -17,6 +17,8 @@ body {
 }
 
 .calculator {
+  display: flex;
+  flex-direction: column;
   width: 350px;
   height: 600px;
   background-color: #191C1D;
@@ -24,7 +26,8 @@ body {
 }
 
 .display {
-  padding: 50px 10px;
+  flex-grow: 2;
+  padding: 10px;
   font-size: 45px;
   background-color: #21353A;
   color: #ffffff;
@@ -65,5 +68,3 @@ body {
 .btn--math-operator {
   background-color: #97AFB7;
 }
-
-
