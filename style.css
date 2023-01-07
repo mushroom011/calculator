@@ -72,3 +72,11 @@ body {
 .btn--basis {
   flex-basis: 153px
 }
+
+.btn:hover, .btn:active{
+  filter: brightness(3);
+}
+
+.btn--math-operator:hover, .btn--math-operator:active{
+  filter: brightness(1.5);
+}
