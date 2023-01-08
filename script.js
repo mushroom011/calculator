@@ -1,21 +1,23 @@
 const keypad = document.querySelector('#keypad');
-const operationStringContainer = document.querySelector('#operation-string');
-const resultContainer = document.querySelector('#result');
+const display = document.querySelector('#display');
+const decimalBtn = document.querySelector('#decimal');
 const operators = ['+', '-', 'x', '/'];
+const excludedSymbols = ['del', '='];
 
 let firstNumber = '';
 let secondNumber = '';
 let operator = '';
 let operationString = '';
+let floatNumber = false;
 
-const addContentToElementContainer = (container, content) => {
-    container.textContent = '';
-    container.textContent = content;
-}
+const updateDisplay = (content) => {
+    display.textContent = content;
+};
 
 const operate = (operator, a, b) => {
     let intA = parseInt(a);
     let intB = parseInt(b);
+    let result = 0;
 
     if(a.includes('.')) {
         intA = parseFloat(a);
@@ -26,37 +28,100 @@ const operate = (operator, a, b) => {
 
     switch (operator) {
         case '+':
-            return intA + intB;
+            result = intA + intB;
+            break;
         case '-':
-            return intA - intB;
+            result = intA - intB;
+            break;
         case 'x':
-            return intA * intB;
+            result = intA * intB;
+            break;
         case '/':
-            return intA / intB;
+            result = intA / intB;
+            break;
     }
 
-}
+    return floatNumber ? result.toFixed(2) : result;
+};
+
+const performAC = () => {
+    operationString = '';
+    operator = '';
+    firstNumber = '';
+    secondNumber = '';
+    floatNumber = false;
+    decimalBtn.disabled = false;
+    updateDisplay('');
+};
+
+const performDel = () => {
+    if(firstNumber !== '' && operator === '') {
+        firstNumber = firstNumber.slice(0, -1);
+        operationString = operationString.slice(0, -1);
+    }
+
+    if(secondNumber !== '' && operator !== '') {
+        secondNumber = secondNumber.slice(0, -1);
+        operationString = operationString.slice(0, -1);
+    }
+};
 
 const keypadHandler = (e) => {
+    if(e.target.id === 'keypad') return;
     const textContent = e.target.textContent;
-    operationString += textContent;
+
+    if(
+        (firstNumber.includes('.') && textContent === '.' && secondNumber === '') ||
+        (firstNumber !== '' && textContent === '.' && secondNumber.includes('.'))
+    ) {
+        decimalBtn.disabled = true;
+        return;
+    }
+
+    if(
+        (textContent === '=' || operators.includes(textContent)) &&
+        firstNumber === '' && secondNumber === ''
+    ) {
+        return;
+    }
+
+    operationString += !excludedSymbols.includes(textContent) ? textContent : '';
+
+    if(operator === '/' && (firstNumber === '0' || secondNumber === '0')) {
+        performAC();
+        updateDisplay('error!');
+        return;
+    }
 
     if(operator !== '' && firstNumber !== '') {
-        secondNumber += textContent;
+        secondNumber += !excludedSymbols.includes(textContent) ? textContent : '';
     } else {
-        firstNumber += textContent;
+        firstNumber += !excludedSymbols.includes(textContent) ? textContent : '';
     }
 
 
     if(operators.includes(textContent)) {
-        operator += textContent;
+        decimalBtn.disabled = false;
+        if(firstNumber !== '' && secondNumber !== ''){
+            firstNumber = operate(operator, firstNumber, secondNumber).toString();
+            secondNumber = '';
+            operator = textContent;
+            operationString = firstNumber + operationString.slice(operationString.indexOf(operator));
+        } else {
+            operator = textContent;
+        }
     }
 
-    if(textContent === '=') {
-        addContentToElementContainer(resultContainer, operate(operator, firstNumber, secondNumber));
+    if(textContent === 'AC') performAC();
+    if(textContent === 'del') performDel();
+    if(textContent === '.') floatNumber = true;
+
+
+    if(textContent === '=' && firstNumber !== '' && secondNumber !== '') {
+        operationString = operate(operator, firstNumber, secondNumber);
     }
 
-    addContentToElementContainer(operationStringContainer, operationString);
+    updateDisplay(operationString);
 };
 
 keypad.addEventListener('click', keypadHandler);
