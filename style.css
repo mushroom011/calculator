@@ -29,10 +29,11 @@ body {
 .display {
   flex-grow: 2;
   padding: 10px;
-  font-size: 45px;
+  font-size: 60px;
   background-color: #21353A;
   color: #ffffff;
   border-radius: 5px;
+  text-align: end;
 }
 
 .keypad {

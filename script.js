@@ -11,6 +11,7 @@ let operationString = '';
 let floatNumber = false;
 
 const updateDisplay = (content) => {
+    if(content.length > 10) display.style.fontSize = '40px';
     display.textContent = content;
 };
 
